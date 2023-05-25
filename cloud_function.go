@@ -40,7 +40,7 @@ func init() {
 	serverURL = os.Getenv("serverURL")
 	gcpProjectId = os.Getenv("gcpProjectId")
 
-	logger.Println("orz hi~", adminAPIKey)
+	logger.Println("Server start with key", adminAPIKey)
 
 	h := handler.NewHandler(serverURL, adminAPIKey, adminAPISecret, savePrime, getPrime)
 	functions.HTTP("PrimeBind", h.PrimeBind)
