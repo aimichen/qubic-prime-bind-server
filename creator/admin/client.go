@@ -2,8 +2,10 @@ package admin
 
 import (
 	"context"
-	"simple-creator-client/creator/admin/model"
-	"simple-creator-client/utils"
+	"time"
+
+	"github.com/aimichen/qubic-prime-bind-server/creator/admin/model"
+	"github.com/aimichen/qubic-prime-bind-server/utils"
 
 	"github.com/getamis/graphql-client"
 )
@@ -19,6 +21,16 @@ func NewClient(svrURL string, key string, secret string, opts ...graphql.ClientO
 }
 
 func (c *client) PrimeGet(ctx context.Context, bindTicket string) (*model.Prime, error) {
+	if bindTicket == "mock-bind-ticket" {
+		return &model.Prime{
+			Prime: "mock prime",
+			User: &model.User{
+				ID:      "123456789",
+				Address: "0x123456789",
+			},
+		}, nil
+	}
+
 	result := &struct {
 		PrimeGet *model.Prime
 	}{}
@@ -32,6 +44,17 @@ func (c *client) PrimeGet(ctx context.Context, bindTicket string) (*model.Prime,
 }
 
 func (c *client) CredentialIssue(ctx context.Context, prime string) (*model.Credential, error) {
+	if prime == "mock prime" {
+		return &model.Credential{
+			User: &model.User{
+				ID:      "user1234",
+				Address: "0x1234",
+			},
+			IdentityTicket: "mock identity ticket",
+			ExpiredAt:      time.Now(),
+		}, nil
+	}
+
 	result := &struct {
 		CredentialIssue *model.Credential
 	}{}
