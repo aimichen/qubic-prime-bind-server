@@ -34,7 +34,6 @@ func BuildQubicSigHeader(key string, secret string, endpoint string) func(body s
 		sig := signature(secret, ts, http.MethodPost, parsed.RequestURI(), body)
 
 		header := http.Header{}
-		header.Set("Content-Type", "application/json")
 		header.Set(MetadataQubicAPIKey, key)
 		header.Set(MetadataQubicTimestamp, ts)
 		header.Set(MetadataQubicSignature, sig)

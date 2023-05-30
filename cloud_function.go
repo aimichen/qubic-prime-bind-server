@@ -26,6 +26,11 @@ var (
 
 // curl -m 70 -X POST https://function-1-oad7xixtwq-as.a.run.app?memberId=qqq\&bindTicket=b -H "Authorization: bearer $(gcloud auth print-identity-token)"
 func init() {
+	adminAPIKey = os.Getenv("adminAPIKey")
+	adminAPISecret = os.Getenv("adminAPISecret")
+	serverURL = os.Getenv("serverURL")
+	gcpProjectId = os.Getenv("gcpProjectId")
+
 	var err error
 	logClient, err = logging.NewClient(context.Background(), gcpProjectId)
 	if err != nil {
@@ -35,16 +40,11 @@ func init() {
 	defer logClient.Close()
 	logger := logClient.Logger("qubic-api-log").StandardLogger(logging.Info)
 
-	adminAPIKey = os.Getenv("adminAPIKey")
-	adminAPISecret = os.Getenv("adminAPISecret")
-	serverURL = os.Getenv("serverURL")
-	gcpProjectId = os.Getenv("gcpProjectId")
-
-	logger.Println("Server start with key", adminAPIKey)
-
 	h := handler.NewHandler(serverURL, adminAPIKey, adminAPISecret, savePrime, getPrime)
 	functions.HTTP("PrimeBind", h.PrimeBind)
 	functions.HTTP("CredentialIssue", h.CredentialIssue)
+
+	logger.Println("Server start with key", adminAPIKey)
 }
 
 type MemberWithPrime struct {
